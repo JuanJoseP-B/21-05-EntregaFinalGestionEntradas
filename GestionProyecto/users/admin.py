@@ -6,10 +6,10 @@ from .models import CustomUser
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = UserAdmin.list_display + ('role',)
+    list_display = UserAdmin.list_display + ('rol',)
     fieldsets = UserAdmin.fieldsets + (
-        ('Rol', {'fields': ('role',)}),
+        ('Rol', {'fields': ('rol',)}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Rol', {'fields': ('role',)}),
+        ('Rol', {'fields': ('rol',)}),
     )

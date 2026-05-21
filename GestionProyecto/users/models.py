@@ -10,8 +10,24 @@ class CustomUser(AbstractUser):
         ASISTENTE = 'ASISTENTE', 'Asistente'
         OPERADOR = 'OPERADOR', 'Operador'
 
-    role = models.CharField(
+    rol = models.CharField(
         max_length=20,
         choices=Role.choices,
         default=Role.ASISTENTE,
     )
+    telefono = models.CharField(max_length=20, blank=True)
+
+    @property
+    def is_organizador(self):
+        return self.rol == self.Role.ORGANIZADOR
+
+    @property
+    def is_asistente(self):
+        return self.rol == self.Role.ASISTENTE
+
+    @property
+    def is_operador(self):
+        return self.rol == self.Role.OPERADOR
+
+    def __str__(self):
+        return self.username

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Evento{% endblock %}
+
+{% block content %}
+<div class="section container-ag" style="max-width:700px;">
+  <div style="margin-bottom:2rem;">
+    <h1 class="font-display" style="margin-bottom:0.25rem;">Crear Evento</h1>
+    <p class="text-muted-ag">Completa los datos de tu nuevo evento</p>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    <div class="glass" style="padding:2rem; margin-bottom:1.5rem;">
+      <h3 class="font-display" style="margin-bottom:1.5rem; font-size:1.1rem;">Información del Evento</h3>
+
+      <div class="form-group">
+        <label class="form-label">Título *</label>
+        <input type="text" name="titulo" class="form-control {% if form.titulo.errors %}is-invalid{% endif %}"
+          placeholder="Nombre del evento" value="{{ form.titulo.value|default:'' }}">
+        {% for e in form.titulo.errors %}<p class="error-feedback">✕ {{ e }}</p>{% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Descripción *</label>
+        <textarea name="descripcion" class="form-control {% if form.descripcion.errors %}is-invalid{% endif %}"
+          rows="4" placeholder="Describe tu evento...">{{ form.descripcion.value|default:'' }}</textarea>
+        {% for e in form.descripcion.errors %}<p class="error-feedback">✕ {{ e }}</p>{% endfor %}
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div class="form-group">
+          <label class="form-label">Fecha de inicio *</label>
+          <input type="datetime-local" name="fecha_inicio" class="form-control"
+            value="{{ form.fecha_inicio.value|default:'' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha de fin *</label>
+          <input type="datetime-local" name="fecha_fin" class="form-control"
+            value="{{ form.fecha_fin.value|default:'' }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select name="estado" class="form-control">
+          {% for val, label in form.fields.estado.choices %}
+            <option value="{{ val }}" {% if form.estado.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Imagen banner (opcional)</label>
+        <input type="file" name="imagen_banner" class="form-control" accept="image/*">
+      </div>
+    </div>
+
+    <div class="glass" style="padding:2rem; margin-bottom:1.5rem;">
+      <h3 class="font-display" style="margin-bottom:0.5rem; font-size:1.1rem;">Ubicación</h3>
+      <p class="text-muted-ag" style="font-size:0.8rem; margin-bottom:1.5rem;">Selecciona una existente o crea una nueva</p>
+
+      <div class="form-group">
+        <label class="form-label">Ubicación existente</label>
+        <select name="ubicacion" class="form-control">
+          <option value="">— Crear nueva ubicación abajo —</option>
+          {% for ub in form.fields.ubicacion.queryset %}
+            <option value="{{ ub.pk }}">{{ ub }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <p class="text-muted-ag" style="font-size:0.8rem; margin:1rem 0;">O ingresa una nueva:</p>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del lugar</label>
+        <input type="text" name="ub-nombre" class="form-control" placeholder="Teatro Principal">
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div class="form-group">
+          <label class="form-label">Ciudad</label>
+          <input type="text" name="ub-ciudad" class="form-control" placeholder="Bogotá">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Capacidad máxima</label>
+          <input type="number" name="ub-capacidad_maxima" class="form-control" placeholder="500" min="1">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Dirección</label>
+        <input type="text" name="ub-direccion" class="form-control" placeholder="Calle 100 # 15-20">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:1rem; justify-content:flex-end;">
+      <a href="{% url 'events:manage' %}" class="btn-ghost">Cancelar</a>
+      <button type="submit" class="btn-primary-ag">Crear Evento</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
