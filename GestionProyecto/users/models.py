@@ -1,0 +1,17 @@
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+
+class CustomUser(AbstractUser):
+    """Usuario personalizado con roles ORGANIZADOR / ASISTENTE / OPERADOR."""
+
+    class Role(models.TextChoices):
+        ORGANIZADOR = 'ORGANIZADOR', 'Organizador'
+        ASISTENTE = 'ASISTENTE', 'Asistente'
+        OPERADOR = 'OPERADOR', 'Operador'
+
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.ASISTENTE,
+    )
