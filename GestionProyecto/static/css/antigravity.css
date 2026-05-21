@@ -1,0 +1,40 @@
+/* Estilos base — GestionEntradas */
+
+:root {
+    --color-primary: #2563eb;
+    --color-bg: #f8fafc;
+    --color-text: #1e293b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+header nav {
+    padding: 1rem 2rem;
+    background: var(--color-primary);
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+main {
+    padding: 2rem;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin-bottom: 1rem;
+}
