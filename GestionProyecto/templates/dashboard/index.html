@@ -23,8 +23,11 @@
       Eventos
     </p>
     {% for evento in eventos %}
-      <button onclick="loadEventData({{ evento.pk }}, '{{ evento.titulo|escapejs }}')"
-              class="sidebar-link" id="evt-btn-{{ evento.pk }}"
+      <button type="button"
+              class="sidebar-link event-selector-btn"
+              id="evt-btn-{{ evento.pk }}"
+              data-event-id="{{ evento.pk }}"
+              data-event-name="{{ evento.titulo }}"
               style="background:none; border:none; width:100%; text-align:left; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         ✦ {{ evento.titulo|truncatechars:28 }}
       </button>
@@ -141,7 +144,19 @@
 {% endblock %}
 
 {% block extra_scripts %}
+<script id="dashboard-config" type="application/json">
+  {"exportUrlTemplate": "{% url 'tickets:export_excel' 0 %}"}
+</script>
 <script>
+  const dashboardConfig = JSON.parse(document.getElementById('dashboard-config').textContent);
+  const exportUrlTemplate = dashboardConfig.exportUrlTemplate.replace('/0/', '/');
+
+  document.querySelectorAll('.event-selector-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      loadEventData(btn.dataset.eventId, btn.dataset.eventName);
+    });
+  });
+
   Chart.defaults.color = '#94a3b8';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
@@ -167,7 +182,7 @@
 
     // Show export button
     const exportContainer = document.getElementById('export-btn-container');
-    document.getElementById('export-link').href = '/tickets/dashboard/exportar/' + eventoId + '/';
+    document.getElementById('export-link').href = exportUrlTemplate + eventoId + '/';
     exportContainer.style.display = 'block';
 
     // Fetch data in parallel
