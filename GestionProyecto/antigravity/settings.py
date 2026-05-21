@@ -64,12 +64,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'antigravity.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import dj_database_url
+
+_db_url = (
+    os.getenv('DATABASE_URL') or
+    os.getenv('POSTGRES_URL') or
+    os.getenv('STORAGE_URL')
+)
+
+if _db_url:
+    DATABASES = {'default': dj_database_url.parse(_db_url, conn_max_age=600, ssl_require=True)}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
