@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar · {{ evento.titulo }}{% endblock %}
+
+{% block content %}
+<div class="section container-ag" style="max-width:700px;">
+  <div style="margin-bottom:2rem;">
+    <h1 class="font-display" style="margin-bottom:0.25rem;">Editar Evento</h1>
+    <p class="text-muted-ag">{{ evento.titulo }}</p>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="glass" style="padding:2rem; margin-bottom:1.5rem;">
+      <h3 class="font-display" style="margin-bottom:1.5rem; font-size:1.1rem;">Información del Evento</h3>
+
+      <div class="form-group">
+        <label class="form-label">Título *</label>
+        <input type="text" name="titulo" class="form-control" value="{{ form.titulo.value|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción *</label>
+        <textarea name="descripcion" class="form-control" rows="4">{{ form.descripcion.value|default:'' }}</textarea>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+        <div class="form-group">
+          <label class="form-label">Fecha de inicio *</label>
+          <input type="datetime-local" name="fecha_inicio" class="form-control"
+            value="{{ evento.fecha_inicio|date:'Y-m-d' }}T{{ evento.fecha_inicio|date:'H:i' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha de fin *</label>
+          <input type="datetime-local" name="fecha_fin" class="form-control"
+            value="{{ evento.fecha_fin|date:'Y-m-d' }}T{{ evento.fecha_fin|date:'H:i' }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estado</label>
+        <select name="estado" class="form-control">
+          {% for val, label in form.fields.estado.choices %}
+            <option value="{{ val }}" {% if evento.estado == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ubicación</label>
+        <select name="ubicacion" class="form-control">
+          <option value="">— Sin ubicación —</option>
+          {% for ub in form.fields.ubicacion.queryset %}
+            <option value="{{ ub.pk }}" {% if evento.ubicacion_id == ub.pk %}selected{% endif %}>{{ ub }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Imagen banner (opcional)</label>
+        {% if evento.imagen_banner %}
+          <p class="text-muted-ag" style="font-size:0.8rem; margin-bottom:0.5rem;">Imagen actual: {{ evento.imagen_banner.name }}</p>
+        {% endif %}
+        <input type="file" name="imagen_banner" class="form-control" accept="image/*">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:1rem; justify-content:flex-end;">
+      <a href="{% url 'events:manage' %}" class="btn-ghost">Cancelar</a>
+      <button type="submit" class="btn-primary-ag">Guardar Cambios</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

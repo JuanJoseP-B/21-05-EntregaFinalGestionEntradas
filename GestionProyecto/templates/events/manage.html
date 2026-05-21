@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Eventos{% endblock %}
+
+{% block content %}
+<div class="section container-ag">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 class="font-display" style="margin-bottom:0.25rem;">Mis Eventos</h1>
+      <p class="text-muted-ag">Gestiona tus eventos como organizador</p>
+    </div>
+    <a href="{% url 'events:create' %}" class="btn-primary-ag">+ Crear Evento</a>
+  </div>
+
+  {% if eventos %}
+    <div class="glass" style="overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.875rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--glass-border);">
+              <th style="text-align:left; padding:1rem; font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Evento</th>
+              <th style="text-align:left; padding:1rem; font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Fecha</th>
+              <th style="text-align:left; padding:1rem; font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Estado</th>
+              <th style="text-align:right; padding:1rem; font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Vendidas</th>
+              <th style="text-align:center; padding:1rem; font-weight:600; color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for evento in eventos %}
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                <td style="padding:1rem; font-weight:500;">
+                  {{ evento.titulo }}
+                  {% if evento.ubicacion %}
+                    <br><span class="text-muted-ag" style="font-size:0.75rem;">📍 {{ evento.ubicacion.ciudad }}</span>
+                  {% endif %}
+                </td>
+                <td style="padding:1rem; color:var(--text-muted); font-size:0.8rem;">{{ evento.fecha_inicio|date:"d M Y" }}</td>
+                <td style="padding:1rem;">
+                  <span class="badge-status badge-{{ evento.estado|lower }}">{{ evento.get_estado_display }}</span>
+                </td>
+                <td style="padding:1rem; text-align:right; color:var(--accent); font-weight:600;">{{ evento.entradas_vendidas }}</td>
+                <td style="padding:1rem; text-align:center;">
+                  <a href="{% url 'events:detail' evento.pk %}" class="btn-ghost" style="padding:5px 12px; font-size:0.75rem; margin:2px;">👁 Ver</a>
+                  <a href="{% url 'events:edit' evento.pk %}" class="btn-ghost" style="padding:5px 12px; font-size:0.75rem; margin:2px;">✏️ Editar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    <div class="glass" style="padding:4rem; text-align:center;">
+      <p style="font-size:3rem; margin-bottom:1rem;">🎭</p>
+      <h3 class="font-display" style="margin-bottom:0.5rem;">Aún no tienes eventos</h3>
+      <p class="text-muted-ag" style="margin-bottom:1.5rem;">Crea tu primer evento y empieza a vender entradas.</p>
+      <a href="{% url 'events:create' %}" class="btn-primary-ag">Crear primer evento</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

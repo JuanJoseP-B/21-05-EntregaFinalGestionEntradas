@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Entradas{% endblock %}
+
+{% block content %}
+<div class="section container-ag">
+  <div style="margin-bottom:2rem;">
+    <h1 class="font-display" style="margin-bottom:0.25rem;">Mis Entradas</h1>
+    <p class="text-muted-ag">Historial de entradas compradas</p>
+  </div>
+
+  {% if entradas %}
+    <div style="display:grid; gap:1rem;">
+      {% for entrada in entradas %}
+        <div class="glass animate-in" style="padding:1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;">
+          <div style="flex:1; min-width:200px;">
+            <p style="font-weight:700; margin-bottom:0.25rem; font-size:1.05rem;">{{ entrada.evento.titulo }}</p>
+            <p class="text-muted-ag" style="font-size:0.8rem; margin-bottom:0.5rem;">
+              📅 {{ entrada.evento.fecha_inicio|date:"d M Y, H:i" }}
+              {% if entrada.evento.ubicacion %} · 📍 {{ entrada.evento.ubicacion.ciudad }}{% endif %}
+            </p>
+            <p style="font-size:0.875rem; color:var(--accent); font-weight:600;">{{ entrada.categoria.nombre }}</p>
+          </div>
+
+          <div style="text-align:right;">
+            <p class="text-gold" style="font-size:1.25rem; font-weight:700; margin-bottom:0.5rem;">
+              ${{ entrada.categoria.precio|floatformat:0 }}
+            </p>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:flex-end;">
+              {% if entrada.pagado %}
+                <span style="background:rgba(52,211,153,0.15); color:#34d399; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">✓ Pagada</span>
+              {% endif %}
+              {% if entrada.usado %}
+                <span style="background:rgba(148,163,184,0.15); color:var(--text-muted); padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">Usada</span>
+              {% else %}
+                <span style="background:rgba(139,92,246,0.15); color:var(--accent); padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">Válida</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div style="text-align:center; border-left:1px solid var(--glass-border); padding-left:1.5rem; min-width:160px;">
+            <p class="text-muted-ag" style="font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5rem;">Código</p>
+            <p style="font-family:monospace; font-size:0.7rem; color:var(--text-secondary); word-break:break-all;">
+              {{ entrada.codigo_unico }}
+            </p>
+            <p class="text-muted-ag" style="font-size:0.7rem; margin-top:0.5rem;">{{ entrada.fecha_compra|date:"d M Y" }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="glass" style="padding:4rem; text-align:center;">
+      <p style="font-size:3rem; margin-bottom:1rem;">🎟️</p>
+      <h3 class="font-display" style="margin-bottom:0.5rem;">No tienes entradas aún</h3>
+      <p class="text-muted-ag" style="margin-bottom:1.5rem;">Explora los eventos disponibles.</p>
+      <a href="{% url 'events:list' %}" class="btn-primary-ag">Ver Eventos</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

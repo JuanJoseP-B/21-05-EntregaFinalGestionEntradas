@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Eventos{% endblock %}
+
+{% block content %}
+<div class="section container-ag">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 class="font-display" style="margin-bottom:0.25rem;">Eventos</h1>
+      <p class="text-muted-ag">Descubre los mejores eventos premium</p>
+    </div>
+    {% if user.is_authenticated and user.is_organizador %}
+      <a href="{% url 'events:create' %}" class="btn-primary-ag">+ Crear Evento</a>
+    {% endif %}
+  </div>
+
+  {% if eventos %}
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1.5rem;">
+      {% for evento in eventos %}
+        <div class="glass animate-in" style="padding:0; overflow:hidden;">
+          {% if evento.imagen_banner %}
+            <img src="{{ evento.imagen_banner.url }}" alt="{{ evento.titulo }}"
+                 style="width:100%; height:180px; object-fit:cover;">
+          {% else %}
+            <div style="width:100%; height:180px; background:linear-gradient(135deg, rgba(139,92,246,0.3), rgba(245,158,11,0.2)); display:flex; align-items:center; justify-content:center;">
+              <span style="font-size:3rem;">✦</span>
+            </div>
+          {% endif %}
+          <div style="padding:1.5rem;">
+            <h3 style="margin-bottom:0.5rem; font-size:1.1rem;">{{ evento.titulo }}</h3>
+            <p class="text-muted-ag" style="font-size:0.8rem; margin-bottom:0.5rem;">
+              📅 {{ evento.fecha_inicio|date:"d M Y, H:i" }}
+            </p>
+            {% if evento.ubicacion %}
+              <p class="text-muted-ag" style="font-size:0.8rem; margin-bottom:0.75rem;">
+                📍 {{ evento.ubicacion.nombre }}, {{ evento.ubicacion.ciudad }}
+              </p>
+            {% endif %}
+            <p style="font-size:0.875rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+              {{ evento.descripcion|truncatechars:100 }}
+            </p>
+            <a href="{% url 'events:detail' evento.pk %}" class="btn-primary-ag"
+               style="width:100%; justify-content:center; text-align:center; display:block;">
+              Ver detalles
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="glass" style="padding:4rem; text-align:center; margin-top:2rem;">
+      <p style="font-size:3rem; margin-bottom:1rem;">✦</p>
+      <h3 class="font-display" style="margin-bottom:0.5rem;">No hay eventos disponibles</h3>
+      <p class="text-muted-ag">Próximamente nuevos eventos premium.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
