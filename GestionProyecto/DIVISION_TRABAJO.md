@@ -1,0 +1,9 @@
+# División del trabajo
+
+| Módulo   | Responsable | Descripción                          |
+|----------|-------------|--------------------------------------|
+| users    |             | Autenticación, roles, perfiles       |
+| events   |             | CRUD de eventos                      |
+| tickets  |             | Venta, validación y check-in         |
+| templates|             | Vistas HTML y dashboard              |
+| static   |             | Estilos (antigravity.css)            |
